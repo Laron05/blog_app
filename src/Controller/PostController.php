@@ -11,6 +11,10 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
 
+/**
+ * Defining a route, /post
+ * Defining a class PostController and extending as AbstractController
+ */
 #[Route('/post')]
 class PostController extends AbstractController
 {
@@ -25,10 +29,13 @@ class PostController extends AbstractController
     #[Route('/new', name: 'app_post_new', methods: ['GET', 'POST'])]
     public function new(Request $request, EntityManagerInterface $entityManager): Response
     {
+
+        // Creating an instance of a class
         $blogPost = new BlogPost();
         $form = $this->createForm(BlogPostType::class, $blogPost);
         $form->handleRequest($request);
 
+        // Using an if statement to state a form condition
         if ($form->isSubmitted() && $form->isValid()) {
             $entityManager->persist($blogPost);
             $entityManager->flush();
@@ -71,6 +78,8 @@ class PostController extends AbstractController
     #[Route('/{id}', name: 'app_post_delete', methods: ['POST'])]
     public function delete(Request $request, BlogPost $blogPost, EntityManagerInterface $entityManager): Response
     {
+
+        // using an if statement to set a condition for a given route
         if ($this->isCsrfTokenValid('delete'.$blogPost->getId(), $request->getPayload()->getString('_token'))) {
             $entityManager->remove($blogPost);
             $entityManager->flush();

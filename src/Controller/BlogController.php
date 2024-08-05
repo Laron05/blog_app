@@ -6,6 +6,10 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
 
+/**
+ * Defining a class BlogController, with properties make, model, and year
+ * adding properties index() and text()
+ */
 class BlogController extends AbstractController
 {
     #[Route('/blog', name: 'app_blog')]
