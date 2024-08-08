@@ -1,0 +1,34 @@
+services:
+  app:
+    build: .
+    restart: always
+    working_dir: /app
+    container_name: symfony_app
+    ports:
+      - "8001:8000"
+    environment:
+      - SYMFONY_ENV=dev
+    depends_on:
+      - db
+    networks:
+      - symfony_network
+
+  db:
+    image: mysql:8.0
+    container_name: app
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: laron@elt
+      MYSQL_DATABASE: blog_db
+      MYSQL_ALLOW_EMPTY_PASSWORD:
+      MYSQL_PASSWORD: user_password
+    volumes:
+      - db_data:/var/lib/mysql
+    networks:
+      - symfony_network
+
+networks:
+  symfony_network:
+
+volumes:
+  db_data:
