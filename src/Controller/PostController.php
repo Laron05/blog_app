@@ -19,9 +19,13 @@ use Symfony\Component\Routing\Attribute\Route;
 class PostController extends AbstractController
 {
     #[Route('/', name: 'app_post_index', methods: ['GET'])]
+
+    // Setting a method (index(""...)) 
     public function index(BlogPostRepository $blogPostRepository): Response
     {
+        // Render a view and pass posts to it
         return $this->render('post/index.html.twig', [
+            // Fetch all blog posts from the repository
             'blog_posts' => $blogPostRepository->findAll(),
         ]);
     }
@@ -35,14 +39,15 @@ class PostController extends AbstractController
         $form = $this->createForm(BlogPostType::class, $blogPost);
         $form->handleRequest($request);
 
-        // Using an if statement to state a form condition
+        // Checking whether a form is submitted by the user
         if ($form->isSubmitted() && $form->isValid()) {
             $entityManager->persist($blogPost);
             $entityManager->flush();
 
             return $this->redirectToRoute('app_post_index', [], Response::HTTP_SEE_OTHER);
         }
-
+        
+        // Rendering a Twig template and return the result as a Response object.
         return $this->render('post/new.html.twig', [
             'blog_post' => $blogPost,
             'form' => $form,
@@ -52,6 +57,7 @@ class PostController extends AbstractController
     #[Route('/{id}', name: 'app_post_show', methods: ['GET'])]
     public function show(BlogPost $blogPost): Response
     {
+        // Rendering a Twig template and return the result as a Response object.
         return $this->render('post/show.html.twig', [
             'blog_post' => $blogPost,
         ]);
@@ -60,20 +66,32 @@ class PostController extends AbstractController
     #[Route('/{id}/edit', name: 'app_post_edit', methods: ['GET', 'POST'])]
     public function edit(Request $request, BlogPost $blogPost, EntityManagerInterface $entityManager): Response
     {
+        // Create the form for editing the blog post
         $form = $this->createForm(BlogPostType::class, $blogPost);
         $form->handleRequest($request);
-
+        
+        // Check if the form is submitted and valid
         if ($form->isSubmitted() && $form->isValid()) {
+            // Get the updated_on value from the request
+            $updatedOn = $request->request->get('updated_on');
+            
+            // Set the updated_on field to the current date and time
+            $blogPost->setUpdatedOn(new \DateTime($updatedOn));
+    
+            // Persist the changes to the database
             $entityManager->flush();
-
+    
+            // Redirect to the index route after successful update
             return $this->redirectToRoute('app_post_index', [], Response::HTTP_SEE_OTHER);
         }
-
+        
+        // Render the edit form view
         return $this->render('post/edit.html.twig', [
             'blog_post' => $blogPost,
             'form' => $form,
         ]);
     }
+    
 
     #[Route('/{id}', name: 'app_post_delete', methods: ['POST'])]
     public function delete(Request $request, BlogPost $blogPost, EntityManagerInterface $entityManager): Response

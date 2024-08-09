@@ -1,2 +1,18 @@
+{# form.html.twig #}
+
 {{ form_start(form) }}
+
+    {# Other form fields go here #}
+
+    {# Hidden field for updated_on - initializes with the current date and time #}
+    <input type="hidden" id="updated_on" name="updated_on" value="{{ 'now'|date('Y-m-d H:i:s') }}" />
+
 {{ form_end(form) }}
+
+<script>
+    // Update the hidden input with the current date and time when the form is submitted
+    document.querySelector('form').addEventListener('submit', function() {
+        // Set the value of the hidden input to the current date and time in the correct format
+        document.getElementById('updated_on').value = new Date().toISOString().slice(0, 19).replace('T', ' ');
+    });
+</script>

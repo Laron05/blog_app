@@ -1,12 +1,12 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Edit BlogPost{% endblock %}
+{% block title %}Edit Post{% endblock %}
 
 {% block body %}
-    <h1>Edit BlogPost</h1>
+    <h1>Edit Post</h1>
 
     <div class="form-container">
-    <a href="{{ path('app_post_index') }}">back to list</a>
+    <a href="{{ path('app_post_index') }}">Back to List</a>
     {{ include('post/_form.html.twig', {'button_label': 'Update'}) }}
     </div>
 

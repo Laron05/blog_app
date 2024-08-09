@@ -34,9 +34,9 @@
     ENV COMPOSER_ALLOW_SUPERUSER=1
 
     # Copy composer.json first to leverage Docker cache
-    COPY composer.json ./
+    # COPY composer.json ./
     COPY . .
-    COPY .env.dev .env
+    # COPY .env.dev .env
 
     # Install dependencies
     RUN  composer --working-dir=/app install -o
