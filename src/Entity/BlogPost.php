@@ -5,44 +5,46 @@ namespace App\Entity;
 use App\Repository\BlogPostRepository;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
+use Gedmo\Mapping\Annotation as Gedmo;
 
 #[ORM\Entity(repositoryClass: BlogPostRepository::class)]
 class BlogPost
 {
-    // Primary key ID for the blog post
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
     private ?int $id = null;
 
-    // Title of the blog post
     #[ORM\Column(length: 255)]
     private ?string $title = null;
 
-    // Content of the blog post
     #[ORM\Column(length: 99999)]
     private ?string $content = null;
 
-    // Date and time when the blog post was created
     #[ORM\Column(type: Types::DATETIME_MUTABLE)]
+    #[Gedmo\Timestampable(on: "create")]
     private ?\DateTimeInterface $created_on = null;
 
-    // Date and time when the blog post was last updated
     #[ORM\Column(type: Types::DATETIME_MUTABLE)]
+    #[Gedmo\Timestampable(on: "update")]
     private ?\DateTimeInterface $updated_on = null;
 
     /**
-     * Constructor to initialize the created_on and updated_on fields
+     * Constructor to initialize the created_on and updated_on fields.
+     * Sets the current date and time in the CAT time zone.
      */
     public function __construct()
     {
-        // Set created_on and updated_on to the current date and time upon creation
-        $this->created_on = new \DateTime();
-        $this->updated_on = new \DateTime();
+        // Define the time zone for Central Africa Time (CAT)
+        $timezone = new \DateTimeZone('Africa/Johannesburg'); // or 'Africa/Gaborone'
+        
+        // Initialize created_on and updated_on to the current date and time in CAT
+        $this->created_on = new \DateTime('now', $timezone);
+        $this->updated_on = new \DateTime('now', $timezone);
     }
 
     /**
-     * Get the ID of the blog post
+     * Get the ID of the blog post.
      *
      * @return int|null The ID of the blog post
      */
@@ -52,7 +54,7 @@ class BlogPost
     }
 
     /**
-     * Set the ID of the blog post (usually not needed, as it's auto-generated)
+     * Set the ID of the blog post (usually not needed, as it's auto-generated).
      *
      * @param int $id The ID to set
      * @return static
@@ -64,7 +66,7 @@ class BlogPost
     }
 
     /**
-     * Get the title of the blog post
+     * Get the title of the blog post.
      *
      * @return string|null The title of the blog post
      */
@@ -74,7 +76,8 @@ class BlogPost
     }
 
     /**
-     * Set the title of the blog post and update the updated_on field
+     * Set the title of the blog post and update the updated_on field.
+     * Updates the updated_on timestamp to the current date and time in CAT.
      *
      * @param string $title The title to set
      * @return static
@@ -83,14 +86,15 @@ class BlogPost
     {
         $this->title = $title;
 
-        // Update updated_on to the current date and time whenever the title is changed
-        $this->updated_on = new \DateTime();
+        // Update updated_on to the current date and time in CAT whenever the title is changed
+        $timezone = new \DateTimeZone('Africa/Johannesburg'); // or 'Africa/Gaborone'
+        $this->updated_on = new \DateTime('now', $timezone);
 
         return $this;
     }
 
     /**
-     * Get the content of the blog post
+     * Get the content of the blog post.
      *
      * @return string|null The content of the blog post
      */
@@ -100,7 +104,8 @@ class BlogPost
     }
 
     /**
-     * Set the content of the blog post and update the updated_on field
+     * Set the content of the blog post and update the updated_on field.
+     * Updates the updated_on timestamp to the current date and time in CAT.
      *
      * @param string $content The content to set
      * @return static
@@ -109,14 +114,15 @@ class BlogPost
     {
         $this->content = $content;
 
-        // Update updated_on to the current date and time whenever the content is changed
-        $this->updated_on = new \DateTime();
+        // Update updated_on to the current date and time in CAT whenever the content is changed
+        $timezone = new \DateTimeZone('Africa/Johannesburg'); // or 'Africa/Gaborone'
+        $this->updated_on = new \DateTime('now', $timezone);
 
         return $this;
     }
 
     /**
-     * Get the creation date and time of the blog post
+     * Get the creation date and time of the blog post.
      *
      * @return \DateTimeInterface|null The creation date and time
      */
@@ -126,7 +132,7 @@ class BlogPost
     }
 
     /**
-     * Set the creation date and time of the blog post (not typically used after creation)
+     * Set the creation date and time of the blog post (not typically used after creation).
      *
      * @param \DateTimeInterface $created_on The creation date and time to set
      * @return static
@@ -138,7 +144,7 @@ class BlogPost
     }
 
     /**
-     * Get the last updated date and time of the blog post
+     * Get the last updated date and time of the blog post.
      *
      * @return \DateTimeInterface|null The last updated date and time
      */
@@ -148,7 +154,7 @@ class BlogPost
     }
 
     /**
-     * Set the last updated date and time of the blog post (optional)
+     * Set the last updated date and time of the blog post (optional).
      *
      * @param \DateTimeInterface $updated_on The updated date and time to set
      * @return static

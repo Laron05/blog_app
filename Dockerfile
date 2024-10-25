@@ -39,7 +39,8 @@
     # COPY .env.dev .env
 
     # Install dependencies
-    RUN  composer --working-dir=/app install -o
+    RUN composer --working-dir=/app install -o \
+        symfony server:ca:install
 
     # Executing the command to start an instance of the Symfony application
     CMD ["symfony", "server:start"]

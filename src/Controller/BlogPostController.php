@@ -5,32 +5,42 @@ namespace App\Controller;
 use App\Entity\BlogPost;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\Routing\Attribute\Route;
+use Symfony\Component\Routing\Annotation\Route;
 
 class BlogPostController extends AbstractController
 {
-    #[Route('/blog/post', name: 'app_blog')]
-    public function createBlogPost(EntityManagerInterface $entityManager): Response
-    {   
-        // Creating a variable ($blogpost), that will hold values for the new instance or method () of the class
-        $blog_post = new BlogPost();
-        /*
-         * $blog_post->setId(1)
-         * Doctrine will handle the ID assignment automatically if configured correctly
-         */
+    // Define the entity manager property
+    private EntityManagerInterface $entityManager;
 
-        /*
-         * Creating an instance ($entityManager)that is marked to the entity ($blogpost)
-         * Mark the entity as managed and ready to be persisted
-         *  */ 
-        $entityManager->persist($blog_post);
+    // Inject the entity manager via the constructor
+    public function __construct(EntityManagerInterface $entityManager)
+    {
+        $this->entityManager = $entityManager;
 
-        /** executing the queries (i.e. the INSERT query)
-         * flush all changes to the database
-        */
-        $entityManager->flush();
-
-        return new Response('Saved new blogpost with id '.$blog_post->getId());
+        // Set the default time zone to Central Africa Time (CAT)
+        date_default_timezone_set('Africa/Johannesburg'); // or 'Africa/Gaborone'
     }
+
+    /**
+     * @Route("/blogpost/create", name="create_blogpost")
+     */
+    public function create(Request $request): Response
+    {
+        $blogPost = new BlogPost();
+
+        // Handle form submission and set blog post properties
+        // For example, you might get data from the request and set it on the blog post
+        // $blogPost->setTitle($request->request->get('title'));
+        // $blogPost->setContent($request->request->get('content'));
+
+        // Persist the blog post entity
+        $this->entityManager->persist($blogPost);
+        $this->entityManager->flush();
+
+        return $this->redirectToRoute('blogpost_list');
+    }
+
+    // Other methods for the controller...
 }
