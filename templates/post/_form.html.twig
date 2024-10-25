@@ -1,0 +1,10 @@
+{# form.html.twig #}
+
+{{ form_start(form) }}
+
+    {# Hidden field for updated_on - initializes with the current date and time #}
+    <input type="hidden" id="updated_on" name="updated_on" value="{{ 'now'|date('Y-m-d H:i:s') }}" />
+
+{{ form_end(form) }}
+
+<script>
